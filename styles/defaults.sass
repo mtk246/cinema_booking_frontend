@@ -1,0 +1,35 @@
+@import "mixins"
+@import "variables"
+
+table, input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="tel"], input[type="url"], input[type="search"], input[type="date"], input[type="datetime"], input[type="datetime-local"], input[type="month"], input[type="time"], input[type="week"], textarea, select
+    font-size: 0.85rem !important
+
+.bg-form-div
+    background-color: $bg-form-div
+
+.btn
+    border: none !important
+
+.btn-primary
+    background-color: $bg-primary !important
+
+.text-custom-primary
+    color: $text-primary !important
+
+.nav-link.active
+    background-color: $bg-primary !important
+
+.page-link
+    background-color: $bg-primary !important
+
+.dropdown-item
+    a
+        text-decoration: none !important
+        color: $text-dark !important
+
+input[readonly]
+    background-color: $readonly-input !important
+
+.form-control
+    &::focus
+        box-shadow: none !important

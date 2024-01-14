@@ -1,0 +1,96 @@
+@import "mixins"
+@import "variables"
+
+// Navbar Start
+
+#wrapper 
+    display: flex
+
+    #content-wrapper 
+        background-color: #f8f9fc
+        width: 100%
+        overflow-x: hidden
+        
+        #content 
+            flex: 1 0 auto
+
+.dropdown
+    .dropdown-menu 
+        font-size: 0.85rem
+
+    #dropdown-language
+        background-color: transparent !important
+        border: none
+        color: $text-dark
+        font-size: 0.85rem
+
+.full-screen-btn
+    z-index: 99
+
+.dropdown.no-arrow .dropdown-toggle::after 
+  display: none
+
+.sidebar 
+    width: 6.5rem
+    min-height: 100vh
+    
+    .nav-item 
+        position: relative
+
+        .nav-link 
+            text-align: center
+            padding: 0.75rem 1rem
+            width: 6.5rem
+
+            span 
+                font-size: 0.65rem
+                display: block
+        
+        .nav-link.active
+            span, svg
+                color: $text-white
+
+    #sidebarToggle 
+        width: 2.5rem
+        height: 2.5rem
+        text-align: center
+        margin-bottom: 1rem
+        cursor: pointer
+
+.sidebar.toggled 
+  width: 0 !important
+  overflow: hidden
+
+@media (min-width: 768px) 
+    .sidebar
+        width: 14rem !important
+    
+        .nav-item
+
+            .nav-link 
+                display: block
+                width: 100%
+                text-align: left
+                padding: 1rem
+                width: 14rem
+    
+                span 
+                    font-size: 0.85rem
+                    display: inline
+    
+    .sidebar.toggled 
+        overflow: visible
+        width: 6.5rem !important
+        
+        .nav-item
+
+            .nav-link 
+                text-align: center
+                padding: 0.75rem 1rem
+                width: 6.5rem
+    
+                span 
+                    font-size: 0.65rem
+                    display: block
+
+// Navbar End

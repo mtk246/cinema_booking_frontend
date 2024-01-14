@@ -1,0 +1,102 @@
+@import "mixins"
+@import "variables"
+
+html, body
+    background-color: $bg-color-1 !important
+
+.caret 
+    display: inline-block
+    width: 0
+    height: 0
+    margin-left: 2px
+    vertical-align: middle
+    border-top: 5px dashed
+    border-top: 5px solid
+    border-right: 5px solid transparent
+    border-left: 5px solid transparent
+  
+  
+.dropup .caret, .navbar-fixed-bottom .dropdown .caret 
+    border-top: 0
+    border-bottom: 5px dashed
+    border-bottom: 5px solid
+    content: ""
+
+.react-bootstrap-table-page-btns-ul
+    @media screen and ( max-width: 768px )
+        margin: 1rem 0 !important
+
+.dropdown-toggle
+    &:after
+        display: none !important
+
+.custom-textarea
+    width: 150px !important
+
+.pagination-scrollable
+    overflow-x: auto
+    white-space: nowrap
+
+a.dropdown-item
+    &:active
+        background-color: $bg-color-2 !important
+
+table
+    tbody
+        tr
+            th
+                vertical-align: middle
+                white-space: nowrap !important
+                text-align: center !important
+            td
+                vertical-align: middle
+                white-space: nowrap
+                text-align: center
+
+.modal
+    .modal-dialog
+        .modal-content
+            .modal-header
+                .modal-title
+                    .modal-caption
+                        font-size: 0.9rem
+
+.MuiTypography-root
+    font-weight: bold
+    font-size: 1.5rem
+    color: $text-primary
+
+.MuiTableCell-head
+    vertical-align: middle !important
+    white-space: nowrap !important
+    text-align: center !important
+
+.modal-xxl
+    max-width: 1200px !important
+    width: 90% !important
+    margin: auto !important
+
+.nav-item
+    &:hover
+        background-color: $bg-color-2
+
+.custom-select
+    z-index: 99 !important
+    width: 200px !important
+    margin: auto !important
+    
+    div
+        padding: 0.3rem
+
+.custom-table-height
+    height: 20rem !important
+
+.production-card
+    height: 10rem !important
+    background-color: #feca89
+
+    &:hover
+        background-color: #c5d5ff !important
+
+.bg-custom-primary
+    background-color: $bg-primary

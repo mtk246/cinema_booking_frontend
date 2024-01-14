@@ -1,0 +1,33 @@
+.dangerCard {
+    border: 1px solid #DC3444 !important;
+    box-shadow: 2px 2px 16px #dc344550;
+}
+
+.warningCard {
+    border: 1px solid #FFC007 !important;
+    box-shadow: 2px 2px 16px #FFC00750;
+}
+
+.infoCard {
+    border: 1px solid #037BFE !important;
+    box-shadow: 2px 2px 16px #037BFE50;
+}
+
+.successCard {
+    border: 1px solid #27A844 !important;
+    box-shadow: 2px 2px 16px #27A84450;
+}
+
+.Modal {
+    position: fixed;
+    z-index: 1200;
+    top: 15%;
+    left: 35%;
+    padding: 20px;
+    min-width: 560px;
+    background-color: white;
+    border: 1px solid #efefef;
+    box-shadow: 2px 2px 10px #00000020;
+    border-radius: 5px;
+    transition: all 0.5s ease-in-out;
+ }
