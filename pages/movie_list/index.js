@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useCallback} from "react";
 import useTranslation from "next-translate/useTranslation";
-import { getApi, postApi, putApi } from "../../utils/api";
+import { getApi, postApi, putApi, getPublicApi} from "../../utils/api";
 import { toast } from "react-toastify";
 import MUIDataTable from "mui-datatables";
 import { convertTimeZone, convertLocaleTimeString } from '../../utils';
@@ -14,24 +14,24 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { decryptData } from "../../utils/crypto";
 
-const Packaging = () => {
-    // const { t } = useTranslation("common");
-    // const [packaging, setPackaging] = useState([]);
-    // const [isUpdatePackaging, setIsUpdatePackaging] = useState(false);
+const Movie = () => {
+    const { t } = useTranslation("common");
+    const [movie, setMovie] = useState([]);
+    const [isUpdateMovie, setIsUpdateMovie] = useState(false);
     const token = jsCookie.get('token');
     const decryptedToken = decryptData(token);
-    const user_id = jsCookie.get('user_id');
+    const user_id = decryptData(jsCookie.get('user_id'));
     const [showModal, setShowModal] = useState(false);
-    // const [createPackaging, setCreatePackaging] = useState({});
-    // const [onePackaging, setOnePackaging] = useState({});
+    const [createMovie, setCreateMovie] = useState({});
+    const [oneMovie, setOneMovie] = useState({});
 
-    const handleShowModal = (packagingTypeId = '') => {
-        if (packagingTypeId !== '') {
-            setIsUpdatePackaging(true);
-            getOnePackaging(packagingTypeId);
+    const handleShowModal = (movieId = '') => {
+        if (movieId !== '') {
+            setIsUpdateMovie(true);
+            getOneMovie(movieId);
         } else {
-            setOnePackaging({});
-            setIsUpdatePackaging(false);
+            setOneMovie({});
+            setIsUpdateMovie(false);
         }
 
         setShowModal(true);
@@ -62,16 +62,16 @@ const Packaging = () => {
             },
         },
         {
-            name: "packaging_type_name",
-            label: "Packaging Name",
+            name: "movie_name",
+            label: "Movie Name",
             options: {
                 filter: true,
                 sort: true,
             }
         },
         {
-            name: "user_name",
-            label: "Modified By",
+            name: "name",
+            label: "Created By",
             options: {
                 filter: true,
                 sort: true,
@@ -84,9 +84,9 @@ const Packaging = () => {
                 filter: true,
                 sort: true,
                 customBodyRender: (value, tableMeta, updateValue) => (
-                    convertTimeZone(packaging[tableMeta.rowIndex]?.created_at)
+                    convertTimeZone(movie[tableMeta.rowIndex]?.created_at)
                     + ' ' +
-                    convertLocaleTimeString(packaging[tableMeta.rowIndex]?.created_at)
+                    convertLocaleTimeString(movie[tableMeta.rowIndex]?.created_at)
                 )
             }
         },
@@ -97,10 +97,10 @@ const Packaging = () => {
                 filter: true,
                 sort: true,
                 customBodyRender: (value, tableMeta, updateValue) => (
-                    packaging[tableMeta.rowIndex]?.updated_at !== null ?
-                    convertTimeZone(packaging[tableMeta.rowIndex]?.updated_at)
+                    movie[tableMeta.rowIndex]?.updated_at !== null ?
+                    convertTimeZone(movie[tableMeta.rowIndex]?.updated_at)
                     + ' ' +
-                    convertLocaleTimeString(packaging[tableMeta.rowIndex]?.updated_at)
+                    convertLocaleTimeString(movie[tableMeta.rowIndex]?.updated_at)
                     : ''
                 )
             }
@@ -114,7 +114,7 @@ const Packaging = () => {
                 customBodyRender: (value, tableMeta, updateValue) => (
                     <Button
                         variant="primary"
-                        onClick={() => handleShowModal(packaging[tableMeta.rowIndex]?.packaging_type_id)}
+                        onClick={() => handleShowModal(movie[tableMeta.rowIndex]?.movie_id)}
                     >
                         <FontAwesomeIcon icon={faEdit} />
                     </Button>
@@ -130,25 +130,25 @@ const Packaging = () => {
     };
 
     const handleRefresh = useCallback(async () => {
-        const fetchApi = getApi("/packaging", decryptedToken);
+        const fetchApi = getPublicApi("/movie");
 
         await fetchApi.then((res) => {
             if (res.status === 200) {
-                setPackaging(res.data.result);
+                setMovie(res.data.result);
             }
             if (res.status === 403) {
                 toast.error("Error");
             }
         });
-    }, [decryptedToken]);
+    }, []);
 
     async function handleSubmit() {
-        if (isUpdatePackaging === true) {
-            onePackaging.user_id = user_id;
+        if (isUpdateMovie === true) {
+            oneMovie.created_by = user_id;
             const putData = putApi(
-                '/packaging',
+                '/movie',
                 decryptedToken,
-                onePackaging,
+                oneMovie,
             );
 
             await putData.then((res) => {
@@ -160,12 +160,12 @@ const Packaging = () => {
                 }
             });
         } else {
-            createPackaging.user_id = user_id;
+            createMovie.created_by = user_id;
 
             const postData = postApi(
-                '/packaging',
+                '/movie',
                 decryptedToken,
-                createPackaging,
+                createMovie,
             );
 
             await postData.then((res) => {
@@ -179,30 +179,30 @@ const Packaging = () => {
         }
 
         handleRefresh();
-        setOnePackaging({});
-        setIsUpdatePackaging(false);
+        setOneMovie({});
+        setIsUpdateMovie(false);
         setShowModal(false);
     }
 
-    const getOnePackaging = useCallback(async (packagingTypeId) => {
-        const fetchApi = getApi(`/packaging?packaging_type_id=` + packagingTypeId, decryptedToken);
+    const getOneMovie = useCallback(async (movieId) => {
+        const fetchApi = getPublicApi(`/movie?movie_id=` + movieId);
 
         await fetchApi.then((res) => {
             if (res.status === 200) {
-                setOnePackaging(res.data?.result[0]);
+                setOneMovie(res.data?.result[0]);
             }
             if (res.status === 403) {
                 toast.error('Unauthorized');
             }
         });
-    }, [decryptedToken, setOnePackaging]);
+    }, [setOneMovie]);
 
     useEffect(() => {
         handleRefresh();
-        getOnePackaging();
+        getOneMovie();
     }, [
         handleRefresh,
-        getOnePackaging,
+        getOneMovie,
     ]);
 
     return (
@@ -221,7 +221,7 @@ const Packaging = () => {
                 <ModalHeader closeButton>
                     <Modal.Title>
                         {
-                            isUpdatePackaging ? ( 'Update Packaging Type') : ('Create Packaging Type')
+                            isUpdateMovie ? ( 'Update Movie') : ('Create Movie')
                         }
                     </Modal.Title>
                 </ModalHeader>
@@ -236,16 +236,16 @@ const Packaging = () => {
                     >
                         <TextField
                             id="outlined-required"
-                            label="Packaging Type Name"
-                            value={onePackaging ? onePackaging?.packaging_type_name : ''}
-                            onChange={(e) => isUpdatePackaging ?
-                                setOnePackaging((prevPackaging => ({
-                                    ...prevPackaging,
-                                    "packaging_type_name": e.target.value
+                            label="Movie Name"
+                            value={oneMovie ? oneMovie?.movie_name : ''}
+                            onChange={(e) => isUpdateMovie ?
+                                setOneMovie((prevMovie => ({
+                                    ...prevMovie,
+                                    "movie_name": e.target.value
                                 })))
-                                : setCreatePackaging((prevPackaging => ({
-                                    ...prevPackaging,
-                                    "packaging_type_name": e.target.value
+                                : setCreateMovie((prevMovie => ({
+                                    ...prevMovie,
+                                    "movie_name": e.target.value
                                 })))
                             }
                         />
@@ -261,8 +261,8 @@ const Packaging = () => {
                 </ModalFooter>
             </Modal>
             <MUIDataTable
-                title={t('packaging_type')}
-                data={packaging}
+                title="Movie Lists"
+                data={movie}
                 columns={columns}
                 options={options}
                 className="shadow-none"
@@ -271,4 +271,4 @@ const Packaging = () => {
     );
 };
 
-export default Packaging;
+export default Movie;

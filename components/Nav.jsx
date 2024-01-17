@@ -114,29 +114,14 @@ function Nav({ children }) {
     if (decryptedRole !== 2) {
         route = [
             {
-                title: 'Movie Management',
+                title: 'Movie List',
                 favIcon: faBuilding,
-                route: '/movie_management'
+                route: '/movie_list'
             },
             {
-                title: 'Production Status',
+                title: 'Movie Schedules',
                 favIcon: faBuilding,
-                route: '/production'
-            },
-            {
-                title: 'Recipe List',
-                favIcon: faBuilding,
-                route: '/recipe'
-            },
-            {
-                title: t('nav_purchase'),
-                favIcon: faBuilding,
-                route: 'purchase'
-            },
-            {
-                title: t('nav_stock_list'),
-                favIcon: faBuilding,
-                route: 'stock_list'
+                route: '/movie_schedules'
             },
             {
                 title: t('userManagement'),

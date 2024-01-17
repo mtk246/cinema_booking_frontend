@@ -54,7 +54,7 @@ export default function App({ Component, pageProps }) {
         setPageTitle(capitalizeTitle(pageTitle));
 
         if (router.pathname === "/") {
-            router.replace("/production");
+            router.replace("/movie_management");
         }
     }, [router, tokenName]);
 
