@@ -5,11 +5,10 @@ import { toast } from "react-toastify";
 import MUIDataTable from "mui-datatables";
 import { convertTimeZone, convertLocaleTimeString } from '../../utils';
 import jsCookie from 'js-cookie';
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Spinner } from "react-bootstrap";
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "react-bootstrap";
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import {
     faEdit,
@@ -20,7 +19,6 @@ import MenuItem from '@mui/material/MenuItem';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs from 'dayjs';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 
@@ -325,36 +323,28 @@ const MovieSchedules = () => {
                             </FormControl>
                         </Box>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DemoContainer components={['DatePicker']}>
                             <DatePicker
                                 label="Start Date"
                                 onChange={(newValue) => setStartDateValue(newValue)}
                             />
-                            </DemoContainer>
                         </LocalizationProvider>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DemoContainer components={['DatePicker']}>
-                            <DatePicker
-                                label="End Date"
-                                onChange={(newValue) => setEndDateValue(newValue)}
+                        <DatePicker
+                            label="End Date"
+                            onChange={(newValue) => setEndDateValue(newValue)}
+                        />
+                        </LocalizationProvider>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <TimePicker
+                                label="Start Time"
+                                onChange={(newValue) => setStartTimeValue(newValue)}
                             />
-                            </DemoContainer>
                         </LocalizationProvider>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DemoContainer components={['TimePicker']}>
-                                <TimePicker
-                                    label="Start Time"
-                                    onChange={(newValue) => setStartTimeValue(newValue)}
-                                />
-                            </DemoContainer>
-                        </LocalizationProvider>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DemoContainer components={['TimePicker']}>
-                                <TimePicker
-                                    label="End Time"
-                                    onChange={(newValue) => setEndTimeValue(newValue)}
-                                />
-                            </DemoContainer>
+                            <TimePicker
+                                label="End Time"
+                                onChange={(newValue) => setEndTimeValue(newValue)}
+                            />
                         </LocalizationProvider>
                     </div>
                 </ModalBody>

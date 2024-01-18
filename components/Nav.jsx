@@ -124,6 +124,11 @@ function Nav({ children }) {
                 route: '/movie_schedules'
             },
             {
+                title: 'Theatre Management',
+                favIcon: faBuilding,
+                route: '/theatre'
+            },
+            {
                 title: t('userManagement'),
                 favIcon: faUser,
                 route: '/user_management'
