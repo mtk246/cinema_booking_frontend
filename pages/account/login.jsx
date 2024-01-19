@@ -78,7 +78,7 @@ function Login(props) {
                     props.onAuthSuccess(authData);
                     toast.success('Logging in...');
 
-                    router.push('/production');
+                    router.push('/movie_list');
                 }
             } else {
                 toast.error(res.data?.message || 'Unauthorized');

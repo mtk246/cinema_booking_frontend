@@ -25,6 +25,7 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 const MovieSchedules = () => {
     const { t } = useTranslation("common");
     const [movie, setMovie] = useState([]);
+    const [theatre, setTheatre] = useState([]);
     const [movieSchedules, setMovieSchedules] = useState([]);
     const [isUpdateMovie, setIsUpdateMovie] = useState(false);
     const token = jsCookie.get('token');
@@ -32,23 +33,29 @@ const MovieSchedules = () => {
     const user_id = decryptData(jsCookie.get('user_id'));
     const [showModal, setShowModal] = useState(false);
     const [createMovie, setCreateMovie] = useState({});
+    const [oneSchedule, setOneSchedule] = useState({});
     const [oneMovie, setOneMovie] = useState({});
     const [selectedMovie, setSelectedMovie] = useState('');
+    const [selectedTheatre, setSelectedTheatre] = useState('');
     const [startDateValue, setStartDateValue] = useState(null);
     const [endDateValue, setEndDateValue] = useState(null);
     const [startTimeValue, setStartTimeValue] = useState(null);
     const [endTimeValue, setEndTimeValue] = useState(null);
 
     const handleChangeMovie = (event) => {
-        // console.log(dayjs(startDateValue).format('YYYY-MM-DD'));
-        // console.log(dayjs(startTimeValue).format('HH:mm'));
         setSelectedMovie(event.target.value);
     };
 
-    const handleShowModal = (movieId = '') => {
-        if (movieId !== '') {
+    const handleChangeTheatre = (event) => {
+        setSelectedTheatre(event.target.value);
+    };
+
+
+    const handleShowModal = (movieId = '', movieTimeId = '') => {
+        if (movieId !== '' && movieTimeId !== '') {
             setIsUpdateMovie(true);
             getOneMovie(movieId);
+            getOneSchedule(movieTimeId);
         } else {
             setOneMovie({});
             setIsUpdateMovie(false);
@@ -77,6 +84,14 @@ const MovieSchedules = () => {
         {
             name: "movie_name",
             label: "Movie Name",
+            options: {
+                filter: true,
+                sort: true,
+            }
+        },
+        {
+            name: "theatre_name",
+            label: "Theatre Name",
             options: {
                 filter: true,
                 sort: true,
@@ -169,7 +184,7 @@ const MovieSchedules = () => {
                 customBodyRender: (value, tableMeta, updateValue) => (
                     <Button
                         variant="primary"
-                        onClick={() => handleShowModal(movieSchedules[tableMeta.rowIndex]?.movie_id)}
+                        onClick={() => handleShowModal(movieSchedules[tableMeta.rowIndex]?.movie_id, movieSchedules[tableMeta.rowIndex]?.movie_time_id)}
                     >
                         <FontAwesomeIcon icon={faEdit} />
                     </Button>
@@ -186,6 +201,8 @@ const MovieSchedules = () => {
 
     const handleRefresh = useCallback(async () => {
         const fetchApi = getPublicApi("/movie/schedules");
+        const fetchTheatres = getPublicApi('/theatre');
+        const fetchMoviesApi = getPublicApi('/movie');
 
         await fetchApi.then((res) => {
             if (res.status === 200) {
@@ -196,7 +213,14 @@ const MovieSchedules = () => {
             }
         });
 
-        const fetchMoviesApi = getPublicApi('/movie');
+        await fetchTheatres.then((res) => {
+            if (res.status === 200) {
+                setTheatre(res.data.result);
+            }
+            if (res.status === 403) {
+                toast.error("Error");
+            }
+        })
 
         await fetchMoviesApi.then((res) => {
             if (res.status === 200) {
@@ -209,30 +233,31 @@ const MovieSchedules = () => {
     }, []);
 
     async function handleSubmit() {
-        if (isUpdateMovie === true) {
-            oneMovie.created_by = user_id;
-            const putData = putApi(
-                '/movie',
-                decryptedToken,
-                oneMovie,
-            );
+        // if (isUpdateMovie === true) {
+        //     oneMovie.created_by = user_id;
+        //     const putData = putApi(
+        //         '/movie',
+        //         decryptedToken,
+        //         oneMovie,
+        //     );
 
-            await putData.then((res) => {
-                if (res.status === 200) {
-                    toast.success(res.data.message);
-                }
-                if (res.status === 403) {
-                    toast.error('Error');
-                }
-            });
-        } else {
+        //     await putData.then((res) => {
+        //         if (res.status === 200) {
+        //             toast.success(res.data.message);
+        //         }
+        //         if (res.status === 403) {
+        //             toast.error('Error');
+        //         }
+        //     });
+        // } else {
             const data = {
                 movie_id: selectedMovie,
                 start_date: dayjs(startDateValue).format('YYYY-MM-DD'),
                 end_date: dayjs(endDateValue).format('YYYY-MM-DD'),
                 start_time: dayjs(startTimeValue).format('HH:mm'),
                 end_time: dayjs(endTimeValue).format('HH:mm'),
-                created_by: user_id
+                created_by: user_id,
+                theatre_id: selectedTheatre
             };
 
             const postData = postApi(
@@ -249,7 +274,7 @@ const MovieSchedules = () => {
                     toast.error('Error');
                 }
             });
-        }
+        // }
 
         handleRefresh();
         setOneMovie({});
@@ -269,6 +294,19 @@ const MovieSchedules = () => {
             }
         });
     }, [setOneMovie]);
+
+    const getOneSchedule = useCallback(async (movieScheduleId) => {
+        const fetchApi = getPublicApi(`/movie/schedules?movie_schedule_id=` + movieScheduleId);
+
+        await fetchApi.then((res) => {
+            if (res.status === 200) {
+                setOneSchedule(res.data?.result[0]);
+            }
+            if (res.status === 403) {
+                toast.error('Unauthorized');
+            }
+        });
+    }, [setOneSchedule]);
 
     useEffect(() => {
         handleRefresh();
@@ -316,6 +354,28 @@ const MovieSchedules = () => {
                                                 value={movie.movie_id}
                                             >
                                                 {movie.movie_name}
+                                            </MenuItem>
+                                        ))
+                                    }
+                                </Select>
+                            </FormControl>
+                        </Box>
+                        <Box sx={{ minWidth: 120 }}>
+                            <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">Theatre Lists</InputLabel>
+                                <Select
+                                    label="Theatre Lists"
+                                    id="theatre_list_id"
+                                    value={theatre ? theatre?.theatre_id : ''}
+                                    onChange={handleChangeTheatre}
+                                >
+                                    {
+                                        theatre?.map((theatre) => (
+                                            <MenuItem
+                                                key={theatre.theatre_id}
+                                                value={theatre.theatre_id}
+                                            >
+                                                {theatre.theatre_name}
                                             </MenuItem>
                                         ))
                                     }

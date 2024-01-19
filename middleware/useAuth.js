@@ -9,7 +9,7 @@ const useAuth = (requiredRole) => {
         const hasRequiredRole = userRoles.includes(requiredRole);
 
         if (!hasRequiredRole) {
-        router.push('/production');
+        router.push('/movie_list');
         }
     }, [requiredRole, router]);
 };
