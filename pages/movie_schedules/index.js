@@ -50,7 +50,6 @@ const MovieSchedules = () => {
         setSelectedTheatre(event.target.value);
     };
 
-
     const handleShowModal = (movieId = '', movieTimeId = '') => {
         if (movieId !== '' && movieTimeId !== '') {
             setIsUpdateMovie(true);

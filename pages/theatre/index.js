@@ -61,18 +61,16 @@ const Theatre = () => {
     const handleShowCreateSeatModal = (theatreId, seat_number_id) => {
         getOneTheatre(theatreId);
 
-        if (seat_number_id !== '') {
-            seats.map((seat) => {
-                if (seat.seat_number_id === seat_number_id) {
-                    setOneSeat(seat);
-                } else {
-                    setOneSeat({});
-                }
-            })
-            setIsUpdateSeat(true);
-        } else {
+        // if (seat_number_id !== '' || seat_number_id !== null || seat_number_id !== undefined) {
+        //     seats.map((seat) => {
+        //         if (seat.seat_number_id === seat_number_id) {
+        //             setOneSeat(seat);
+        //         }
+        //     })
+        //     setIsUpdateSeat(true);
+        // } else {
             setIsUpdateSeat(false);
-        }
+        // }
 
         setShowCreateSeatModal(true);
     };
@@ -173,6 +171,14 @@ const Theatre = () => {
         },
         {
             name: "seat_name",
+            label: "Seat Number",
+            options: {
+                filter: true,
+                sort: true,
+            }
+        },
+        {
+            name: "seat_price",
             label: "Seat Number",
             options: {
                 filter: true,
@@ -312,6 +318,7 @@ const Theatre = () => {
             const data = {
                 seat_name: createSeat.seat_name,
                 theatre_id: oneTheatre.theatre_id,
+                seat_price: createSeat.seat_price,
                 created_by: user_id
             };
 
@@ -334,7 +341,7 @@ const Theatre = () => {
         handleRefresh();
         setOneTheatre({});
         setIsUpdateTheatre(false);
-        setShowModal(false);
+        setShowCreateSeatModal(false);
     }
 
     const getOneTheatre = useCallback(async (theatreId) => {
@@ -496,6 +503,21 @@ const Theatre = () => {
                                         : setCreateSeat((prevMovie => ({
                                             ...prevMovie,
                                             "seat_name": e.target.value
+                                        })))
+                                    }
+                                />
+                                <TextField
+                                    id="outlined-required"
+                                    label="Seat Price"
+                                    value={oneSeat ? oneSeat?.seat_price : ''}
+                                    onChange={(e) => isUpdateSeat ?
+                                        setOneSeat((prevMovie => ({
+                                            ...prevMovie,
+                                            "seat_price": e.target.value
+                                        })))
+                                        : setCreateSeat((prevMovie => ({
+                                            ...prevMovie,
+                                            "seat_price": e.target.value
                                         })))
                                     }
                                 />
